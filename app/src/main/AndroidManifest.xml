@@ -16,7 +16,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".drawing.DrawingActivity"/>
+        <activity android:name=".drawing_simple.DrawingActivity" android:screenOrientation="landscape"/>
+        <activity android:name=".drawing_advance.view.PaintActivity"/>
     </application>
 
 </manifest>

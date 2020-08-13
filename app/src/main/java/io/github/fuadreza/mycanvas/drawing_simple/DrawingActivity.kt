@@ -1,4 +1,4 @@
-package io.github.fuadreza.mycanvas.drawing
+package io.github.fuadreza.mycanvas.drawing_simple
 
 import android.os.Bundle
 import android.view.View.SYSTEM_UI_FLAG_FULLSCREEN

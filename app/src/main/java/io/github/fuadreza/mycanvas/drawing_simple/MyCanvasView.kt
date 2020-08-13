@@ -1,4 +1,4 @@
-package io.github.fuadreza.mycanvas.drawing
+package io.github.fuadreza.mycanvas.drawing_simple
 
 import android.content.Context
 import android.graphics.*

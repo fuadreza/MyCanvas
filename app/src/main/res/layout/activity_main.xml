@@ -35,4 +35,15 @@
         android:layout_marginRight="16dp"
         android:layout_marginTop="50dp"/>
 
+    <Button
+        android:id="@+id/btn_drawing"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dialView"
+        android:layout_marginTop="50dp"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:text="Drawing"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

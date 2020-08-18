@@ -184,22 +184,23 @@ class PaintActivity: AppCompatActivity(), ColorPickerSwatch.OnColorSelectedListe
     @Throws(IOException::class)
     private fun saveImage(bitmap: Bitmap, name: String) {
         val fos: OutputStream?
+        val directory = Environment.DIRECTORY_PICTURES + File.separator + "Elea"
         fos = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val resolver = contentResolver
             val contentValues = ContentValues()
             contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "$name.png")
             contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
-            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, "${Environment.DIRECTORY_PICTURES}/Elea")
+            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, directory)
             val imageUri: Uri? = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
             resolver.openOutputStream(imageUri!!)
         } else {
             val imagesDir: String =
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
                     .toString()
-            val image = File(imagesDir, "$name.jpg")
+            val image = File(imagesDir, "$name.png")
             FileOutputStream(image)
         }
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
         Objects.requireNonNull(fos)?.close()
     }
 }

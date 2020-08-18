@@ -26,6 +26,7 @@ class PaintCanvas(context: Context, attributes: AttributeSet) : View(context, at
         if (::bitMap.isInitialized) bitMap.recycle()
         bitMap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
         canvas = Canvas(bitMap)
+        canvas.drawColor(Color.WHITE)
         /*if(::bitMap.isInitialized){
             //each pixel is 4 bytes
             bitMap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
@@ -40,6 +41,7 @@ class PaintCanvas(context: Context, attributes: AttributeSet) : View(context, at
     override fun onDraw(canvas: Canvas?) {
         canvas?.let {
             super.onDraw(canvas)
+            bitMapPaint.color = Color.WHITE
             canvas.drawBitmap(bitMap, 0f, 0f, bitMapPaint)
             canvas.drawPath(viewModel.getBrushPath(), viewModel.getPaint())
 
@@ -56,8 +58,8 @@ class PaintCanvas(context: Context, attributes: AttributeSet) : View(context, at
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         event?.let {
             super.onTouchEvent(event)
-            var posX = event.x
-            var posY = event.y
+            val posX = event.x
+            val posY = event.y
 
             when(event.action){
                 MotionEvent.ACTION_DOWN -> {

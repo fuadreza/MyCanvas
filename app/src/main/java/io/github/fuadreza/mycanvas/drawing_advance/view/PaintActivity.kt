@@ -1,6 +1,7 @@
 package io.github.fuadreza.mycanvas.drawing_advance.view
 
 import android.content.ContentValues
+import android.content.Intent
 import android.graphics.*
 import android.net.Uri
 import android.os.Build
@@ -29,6 +30,9 @@ import java.util.*
  *
  */
 class PaintActivity: AppCompatActivity(), ColorPickerSwatch.OnColorSelectedListener, SeekBar.OnSeekBarChangeListener {
+
+    val REQUEST_IMAGE_CAPTURE = 1
+
     override fun onProgressChanged(seekbar: SeekBar?, progress: Int, user: Boolean) {
         // cant have 0 size
         val size = if (progress <= 0) 1f else progress.toFloat()
@@ -167,6 +171,10 @@ class PaintActivity: AppCompatActivity(), ColorPickerSwatch.OnColorSelectedListe
                 saveImage(bitmap, filename)
             }
         }
+
+        btn_camera.setOnClickListener {
+            dispatchTakePictureIntent()
+        }
     }
 
     fun writeBitmapToMemory(filename: String, bitmap: Bitmap) {
@@ -203,4 +211,21 @@ class PaintActivity: AppCompatActivity(), ColorPickerSwatch.OnColorSelectedListe
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
         Objects.requireNonNull(fos)?.close()
     }
+
+    private fun dispatchTakePictureIntent() {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            takePictureIntent.resolveActivity(packageManager)?.also {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+            }
+        }
+    }
+
+    // Untuk menampilkan hasil foto tapi cuma Thumbnail kecil
+    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            val imageBitmap = data?.extras?.get("data") as Bitmap
+            canvas.drawSavedBitMap(imageBitmap)
+        }
+    }*/
 }

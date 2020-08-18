@@ -19,6 +19,8 @@ class PaintCanvas(context: Context, attributes: AttributeSet) : View(context, at
     var bitMapPaint: Paint = Paint(Paint.DITHER_FLAG)
     var viewModel: PaintViewModel = PaintViewModel()
 
+    var strokePaint: Paint = Paint()
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         if (::bitMap.isInitialized) bitMap.recycle()
@@ -40,6 +42,14 @@ class PaintCanvas(context: Context, attributes: AttributeSet) : View(context, at
             super.onDraw(canvas)
             canvas.drawBitmap(bitMap, 0f, 0f, bitMapPaint)
             canvas.drawPath(viewModel.getBrushPath(), viewModel.getPaint())
+
+            //border
+            val radius = 10f
+            strokePaint.style = Paint.Style.STROKE
+            strokePaint.color = Color.GRAY
+            strokePaint.strokeWidth = 10f
+
+            canvas.drawRoundRect(0f, 0f, 0f, 0f, radius, radius, strokePaint)
         }
     }
 

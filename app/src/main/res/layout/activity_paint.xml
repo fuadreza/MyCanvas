@@ -1,26 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/btn_color"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@drawable/ic_color_lens_24"/>
+
+        <ImageButton
+            android:id="@+id/btn_brush"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@drawable/ic_brush_24"/>
+
+    </LinearLayout>
 
     <io.github.fuadreza.mycanvas.drawing_advance.view.PaintCanvas
         android:id="@+id/canvas"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginBottom="100dp"
+        android:layout_marginTop="72dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" />
 
-    <include
+    <!--<include
         android:id="@+id/options"
-        layout="@layout/options_bottom_sheet" />
+        layout="@layout/options_bottom_sheet"
+        app:layout_constraintTop_toBottomOf="parent"/>-->
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/canvas"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/btn_clear"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@drawable/ic_baseline_clear_24"/>
+
+        <ImageButton
+            android:id="@+id/btn_camera"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@drawable/ic_camera"/>
+
+        <ImageButton
+            android:id="@+id/btn_next"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@drawable/ic_play_arrow"/>
+
+    </LinearLayout>
+
+    <!--<com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_brush_24"
         app:layout_anchor="@id/options"
-        app:layout_anchorGravity="top|end"/>
+        app:layout_anchorGravity="top|end" />-->
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,24 +1,28 @@
 package io.github.fuadreza.mycanvas.drawing_advance.view
 
+import android.content.ContentValues
 import android.graphics.*
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.os.PersistableBundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.view.View
 import android.widget.SeekBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
 import com.android.colorpicker.ColorPickerDialog
 import com.android.colorpicker.ColorPickerSwatch
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import io.github.fuadreza.mycanvas.R
-
-import kotlinx.android.synthetic.main.activity_drawing.view.*
 import kotlinx.android.synthetic.main.activity_paint.*
 import kotlinx.android.synthetic.main.brush_width_view.*
 import kotlinx.android.synthetic.main.brush_width_view.view.*
-import kotlinx.android.synthetic.main.options_bottom_sheet.view.*
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStream
+import java.util.*
+
 
 /**
  * Dibuat dengan kerjakerasbagaiquda oleh Shifu pada tanggal 13/08/2020.
@@ -48,6 +52,7 @@ class PaintActivity: AppCompatActivity(), ColorPickerSwatch.OnColorSelectedListe
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_paint)
+        supportActionBar?.hide()
 
         setupOptionsClickListeners()
 
@@ -106,14 +111,14 @@ class PaintActivity: AppCompatActivity(), ColorPickerSwatch.OnColorSelectedListe
 
     private fun setupOptionsClickListeners() {
 
-        fab.setOnClickListener { _ ->
+        /*fab.setOnClickListener { _ ->
             val optionsBehavior = BottomSheetBehavior.from(options)
             optionsBehavior?.let {
                 it.state = if (it.state == BottomSheetBehavior.STATE_EXPANDED) BottomSheetBehavior.STATE_COLLAPSED else BottomSheetBehavior.STATE_EXPANDED
             }
-        }
+        }*/
 
-        options.modifyColorBtn?.setOnClickListener { view ->
+        btn_color.setOnClickListener { _ ->
             canvas?.let {
                 val colorPicker = ColorPickerDialog()
                 val allColors: IntArray = canvas.getAllColors()
@@ -127,7 +132,7 @@ class PaintActivity: AppCompatActivity(), ColorPickerSwatch.OnColorSelectedListe
             }
         }
 
-        options.clearCanvasBtn.setOnClickListener { _ ->
+        btn_clear.setOnClickListener { _ ->
             val alert = AlertDialog.Builder(this)
                 .setTitle(R.string.dialog_clear_canvas)
                 .setPositiveButton(android.R.string.yes) {
@@ -142,7 +147,7 @@ class PaintActivity: AppCompatActivity(), ColorPickerSwatch.OnColorSelectedListe
             alert.show()
         }
 
-        options.modifyBrushWidthBtn.setOnClickListener { _ ->
+        btn_brush.setOnClickListener { _ ->
             val alert = AlertDialog.Builder(this)
                 .setTitle(R.string.brush_width_change_title)
                 .setView(R.layout.brush_width_view)
@@ -154,5 +159,47 @@ class PaintActivity: AppCompatActivity(), ColorPickerSwatch.OnColorSelectedListe
             drawBrushWidthCircle(canvas.getCurrentBrushSize(), alert)
         }
 
+        btn_next.setOnClickListener {
+            canvas?.let {
+                val bitmap = Bitmap.createBitmap(canvas.bitMap)
+                val filename = "contoh"
+                //writeBitmapToMemory(filename, bitmap) -- masih error (Readonly files | Not found)
+                saveImage(bitmap, filename)
+            }
+        }
+    }
+
+    fun writeBitmapToMemory(filename: String, bitmap: Bitmap) {
+        val path = getExternalFilesDir(null)
+        val file = File(path, filename)
+        val fos = FileOutputStream(file)
+        try {
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+            //PNG is lossless so it will ignore 100 quality
+        } catch (e: IOException){
+            e.printStackTrace()
+        }
+    }
+
+    @Throws(IOException::class)
+    private fun saveImage(bitmap: Bitmap, name: String) {
+        val fos: OutputStream?
+        fos = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val resolver = contentResolver
+            val contentValues = ContentValues()
+            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "$name.png")
+            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
+            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, "${Environment.DIRECTORY_PICTURES}/Elea")
+            val imageUri: Uri? = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+            resolver.openOutputStream(imageUri!!)
+        } else {
+            val imagesDir: String =
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                    .toString()
+            val image = File(imagesDir, "$name.jpg")
+            FileOutputStream(image)
+        }
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+        Objects.requireNonNull(fos)?.close()
     }
 }
